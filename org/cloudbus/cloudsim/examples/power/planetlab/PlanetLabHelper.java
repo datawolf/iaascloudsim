@@ -59,13 +59,14 @@ public class PlanetLabHelper {
 						outputSize,
 						new UtilizationModelPlanetLabInMemory(
 								files[i].getAbsolutePath(),
-								Constants.SCHEDULING_INTERVAL), utilizationModelNull, utilizationModelNull, true);
+								Constants.SCHEDULING_INTERVAL), utilizationModelNull, utilizationModelNull);
+//								Constants.SCHEDULING_INTERVAL), utilizationModelNull, utilizationModelNull, true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(0);
 			}
 			cloudlet.setUserId(brokerId);
-//			cloudlet.setVmId(i);
+			cloudlet.setVmId(i);
 			list.add(cloudlet);
 		}
 

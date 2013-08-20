@@ -237,6 +237,10 @@ public class MyPowerVm extends Vm {
 	public double getSchedulingInterval() {
 		return schedulingInterval;
 	}
+	
+	public void setIndex(int index){
+		this.index = index;
+	}
 
 	/**
 	 * Sets the total mips.
@@ -422,7 +426,7 @@ public class MyPowerVm extends Vm {
 	 * @return the utilization of cpu
 	 */
 	public double getUtilizationOfCpu(final double time){
-		return this.getUtilizationModelCpu().getUtilization(time);
+		return getUtilizationModelCpu().getUtilization(time);
 	}
 	
 
@@ -453,7 +457,7 @@ public class MyPowerVm extends Vm {
 	 * @return the utilization of memory
 	 */
 	public double getUtilizationOfRam(final double time){
-		return this.getUtilizationModelRam().getUtilization(time);
+		return getUtilizationModelRam().getUtilization(time);
 	}
 
 
@@ -482,7 +486,7 @@ public class MyPowerVm extends Vm {
 	 * @return the utilization of bw
 	 */
 	public double getUtilizationOfBw(final double time){
-		return this.getUtilizationModelBw().getUtilization(time);
+		return getUtilizationModelBw().getUtilization(time);
 	}
 			
 	/**
@@ -491,21 +495,28 @@ public class MyPowerVm extends Vm {
 	 * @return the current requested mips
 	 */
 	public List<Double> getCurrentRequestedMips() {
-		
-		if (getCachePreviousTime() == getPreviousTime()) {
-			return getCacheCurrentRequestedMips();
-		}
-		
+	
 		List<Double> currentMips = new ArrayList<Double>();
-		double totalMips = getTotalUtilizationOfCpu(getPreviousTime()) * getTotalMips();
-		double mipsForPe = totalMips / getNumberOfPes();
-
-		for (int i = 0; i < getNumberOfPes(); i++) {
-			currentMips.add(mipsForPe);
+		
+		if (isBeingInstantiated()) {
+			currentMips = new ArrayList<Double>();
+			for (int i = 0; i < getNumberOfPes(); i++) {
+				currentMips.add(getMips());
+			}
+			
+			setCachePreviousTime(getPreviousTime());
+			setCacheCurrentRequestedMips(currentMips);
+		}else
+		{
+			currentMips = new ArrayList<Double>();
+			double totalMips = getTotalUtilizationOfCpu(getPreviousTime()) * getTotalMips();
+			double mipsForPe = totalMips / getNumberOfPes();
+			for (int i = 0; i < getNumberOfPes(); i++) {
+				currentMips.add(mipsForPe);
+			}
+			setCachePreviousTime(getPreviousTime());
+			setCacheCurrentRequestedMips(currentMips);
 		}
-
-		setCachePreviousTime(getPreviousTime());
-		setCacheCurrentRequestedMips(currentMips);
 
 		return currentMips;
 		
@@ -568,7 +579,7 @@ public class MyPowerVm extends Vm {
 
 		final double result = finish - now;
 
-		if (result >= 0.0) {
+		if (result <= 0.0) {
 			completed = true;
 		}
 		return completed;
@@ -583,7 +594,7 @@ public class MyPowerVm extends Vm {
 		if (isBeingInstantiated()) {
 			return getBw();
 		}
-		return (long) (this.getUtilizationOfBw(CloudSim.clock()) * getBw());
+		return (long) (getUtilizationOfBw(CloudSim.clock()) * getBw());
 	}
 
 	/**
@@ -595,6 +606,6 @@ public class MyPowerVm extends Vm {
 		if (isBeingInstantiated()) {
 			return getRam();
 		}
-		return (int) (this.getUtilizationOfRam(CloudSim.clock()) * getRam());
+		return (int) (getUtilizationOfRam(CloudSim.clock()) * getRam());
 	}
 }

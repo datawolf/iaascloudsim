@@ -6,7 +6,6 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.util.MathUtil;
 import org.g308.iaas.MyPowerHost;
-import org.g308.iaas.PowerHostUtilizationHistory;
 
 public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllocationPolicyMigrationAbstract {
 
@@ -69,8 +68,8 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 	 */
 	@Override
 	protected boolean isHostOverUtilized(MyPowerHost host) {
-		PowerHostUtilizationHistory _host = (PowerHostUtilizationHistory) host;
-		double[] utilizationHistory = _host.getUtilizationHistory();
+//		MyPowerHost _host = (MyPowerHost) host;
+		double[] utilizationHistory = host.getUtilizationHistory();
 		
 		//使用了最近的10个历史数据，当数据量不足10个时，使用fallbackVmAllocationPolicy终端判断过载的策略
 		int length = 10; // we use 10 to make the regression responsive enough to latest values
@@ -95,7 +94,7 @@ public class PowerVmAllocationPolicyMigrationLocalRegression extends PowerVmAllo
 		
 		
 		//这部分应该看看论文里面的描述
-		double migrationIntervals = Math.ceil(getMaximumVmMigrationTime(_host) / getSchedulingInterval());
+		double migrationIntervals = Math.ceil(getMaximumVmMigrationTime(host) / getSchedulingInterval());
 		double predictedUtilization = estimates[0] + estimates[1] * (length + migrationIntervals);
 		predictedUtilization *= getSafetyParameter();
 

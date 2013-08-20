@@ -54,7 +54,7 @@ public class Helper {
 			//每一个cloudlet对应一个虚拟机。
 			//举例：有1052个虚拟机，前1/4的虚拟机类型为vmType 0.前1/4到2/4的虚拟机类型为vmType 1.
 			//前2/4到3/4的虚拟机类型为vmType 2.前3/4到4/4的虚拟机类型为vmType 3.
-			int vmType = i / (int) Math.ceil((double) vmsNumber / Constants.VM_TYPES);
+//			int vmType = i / (int) Math.ceil((double) vmsNumber / Constants.VM_TYPES);
 //			vms.add(new PowerVm(
 //					i,
 //					brokerId,
@@ -746,7 +746,6 @@ public class Helper {
 					utilizationModelNull,
 					Constants.SCHEDULING_INTERVAL
 					);
-			
 			vm.setUserId(brokerId);
 			list.add(vm);
 		}

@@ -401,6 +401,7 @@ public abstract class PowerVmAllocationPolicyMigrationAbstract extends PowerVmAl
 	protected List<MyPowerHost> getOverUtilizedHosts() {
 		List<MyPowerHost> overUtilizedHosts = new LinkedList<MyPowerHost>();
 		for (MyPowerHost host : this.<MyPowerHost> getHostList()) {
+			
 			if (isHostOverUtilized(host)) {
 				overUtilizedHosts.add(host);
 			}

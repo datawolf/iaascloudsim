@@ -410,6 +410,20 @@ public class MyPowerDatacenter extends Datacenter {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.cloudbus.cloudsim.Datacenter#processVmMigrate(org.cloudbus.cloudsim.core.SimEvent,
+	 * boolean)
+	 */
+	@Override
+	protected void processVmMigrate(SimEvent ev, boolean ack) {
+		updateVmProcessingWithoutSchedulingFutureEvents();
+		super.processVmMigrate(ev, ack);
+		SimEvent event = CloudSim.findFirstDeferred(getId(), new PredicateType(CloudSimTags.VM_MIGRATE));
+		if (event == null || event.eventTime() > CloudSim.clock()) {
+			updateVmProcessingWithoutSchedulingFutureEventsForce();
+		}
+	}
 	
 	/**
 	 * Verifies if some virtual machine inside this PowerDatacenter already finished. If yes, send it to
@@ -548,6 +562,7 @@ public class MyPowerDatacenter extends Datacenter {
 		try {
 			// gets the vm object
 			MyPowerVm vm = (MyPowerVm) ev.getData();
+			vm.setHostId(vm.getHost().getId());
 
 			// checks whether this vm has finished or not
 			if (vm.isFinished()) {

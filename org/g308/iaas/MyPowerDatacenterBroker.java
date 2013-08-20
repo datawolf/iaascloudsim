@@ -216,6 +216,7 @@ public class MyPowerDatacenterBroker extends DatacenterBroker {
 		
 		List<? extends MyPowerVm> vmList = getVmList();
 		for (MyPowerVm vm : vmList){
+			vm.setIndex(0);
 			getVmSubmittedList().add(vm);
 			vmsSubmitted++;
 			sendNow(getVmsToDatacentersMap().get(vm.getId()), MyCloudSimTags.MY_VM_SUBMIT, vm);

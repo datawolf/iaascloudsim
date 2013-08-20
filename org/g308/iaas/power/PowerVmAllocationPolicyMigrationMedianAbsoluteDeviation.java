@@ -61,10 +61,10 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends Pow
 	 */
 	@Override
 	protected boolean isHostOverUtilized(MyPowerHost host) {
-		PowerHostUtilizationHistory _host = (PowerHostUtilizationHistory) host;
+//		PowerHostUtilizationHistory _host = (PowerHostUtilizationHistory) host;
 		double upperThreshold = 0;
 		try {
-			upperThreshold = 1 - getSafetyParameter() * getHostUtilizationMad(_host);
+			upperThreshold = 1 - getSafetyParameter() * getHostUtilizationMad(host);
 		} catch (IllegalArgumentException e) {
 			return getFallbackVmAllocationPolicy().isHostOverUtilized(host);
 		}
@@ -83,7 +83,7 @@ public class PowerVmAllocationPolicyMigrationMedianAbsoluteDeviation extends Pow
 	 * @param host the host
 	 * @return the host utilization mad
 	 */
-	protected double getHostUtilizationMad(PowerHostUtilizationHistory host) throws IllegalArgumentException {
+	protected double getHostUtilizationMad(MyPowerHost host) throws IllegalArgumentException {
 		double[] data = host.getUtilizationHistory();
 		if (MathUtil.countNonZeroBeginning(data) >= 12) { // 12 has been suggested as a safe value
 			return MathUtil.mad(data);
